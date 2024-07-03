@@ -1,78 +1,99 @@
-/**************************************
- ******PLOT ORBITAL WAVEFUNCTIONS******
- *************************************/
-#include<stdio.h>
-#include<math.h>
+#include <stdio.h>
 #include <time.h>
 #include <sys/time.h>
+#include <math.h>
 int * gen(){
   struct timeval tv;
   gettimeofday(&tv, NULL);
-  static int digits[1000];
+  static int digits[10000];
   int value = tv.tv_usec;
-  int old = value;
-  int old2 = value;
-  int t;
-  int n;
-  for (int i=1; i<=1000; i++)
+  int old = value%10000;
+  unsigned long int seed = tv.tv_usec;
+  unsigned int m = 0x7fffffff;
+  int a = 16807;
+  int x;
+  int y;
+  int s;
+  int z0;
+  int z1;
+  for (int i=1; i<=10000; i++)
   {
-    t = 99;
-    n = 0;
-    for (;;)
-    {
-      if (value%t==0)
-      {
-        if (value%10>=5)
-        {
-          digits[i] = 99-n;
-          printf("%d\t", digits[i]);
-        }
-        else
-        {
-          digits[i] = 0+n;
-          printf("%d\t", digits[i]);
-        }
-        break;
-      }
-      t-=2;
-      n++;
+    seed = seed * a % m;
+    x = seed%100;
+    seed = seed * a % m;
+    y = seed%100;
+    if (abs(50-x)<abs(50-y)){
+      digits[i] = x;
     }
-    if (value>=100)
-    {
-      value = value/100;
+    else{
+      digits[i] = y;
     }
-    else
-    {
-      value = old2*old2/100;
-      if (value%100==0){
-        value=value/100;
-      }
-      else if(value%10000<100){
-        value=value%10000+value/100;
-      }
-      else{
-        value=value%10000;
-      }
-      // if (value==old)
-      // {
-      //   value = (value*value)%1000000;
+    printf("%d\t", digits[i]);
+    // do{
+    //   seed = seed * a % m;
+    //   x = seed%100;
+    //   seed = seed * a % m;
+    //   y = seed%100;
+    //   s = x*x+y*y;
+    // }
+    // while(s<=50||s>99);
+    // z0 = x*sqrt(-2*log(s)/s);
+    // z1 = y*sqrt(-2*log(s)/s);
+    // digits[i] = z0;
+    // printf("%d\t", x);
+    // digits[i+1] = z1;
+    // printf("%d\t", y);
+
+    // t = 197;
+    // n = 0;
+    // for (;;)
+    // {
+    //   if (seed%t==0)
+    //   {
+    //     if (seed%10>=5)
+    //     {
+    //       digits[i] = 99-n;
+    //       printf("%d\t", digits[i]);
+    //     }
+    //     else
+    //     {
+    //       digits[i] = 0+n;
+    //       printf("%d\t", digits[i]);
+    //     }
+    //     break;
+    //   }
+    //   t-=4;
+    //   n++;
+    // }
+
+    // if (value>=100)
+    // {
+    //   value = value/100;
+    // }
+    // else
+    // {
+
+      // value = old*old/100;
+      // if (value%100==0){
+      //   value=value/100;
       // }
-      old2 = value;
-    }
+      // else if(value%10000<100){
+      //   value=value%10000+value/100;
+      // }
+      // else{
+      //   value=value%10000;
+      // }
+      // old = value;
+    // }
   }
   return digits;
 }
-int main(){
+int main(void)
+{
   int *digits = gen();
-  FILE *fp2=NULL;
-  fp2=fopen("orb2.txt","w");
-  for(int i=1;i<=1000;i+=2){
-    // if (digits[i]>=10){
-    //   digits[i]=digits[i]%10;
-    // }
-    // if (digits[i+1]>=10){
-    //   digits[i+1]=digits[i+1]%10;
-    // }
-    fprintf(fp2,"%d\t%d\n", digits[i],digits[i+1]);
+  FILE *fp3=NULL;
+  fp3=fopen("gen2.txt","w");
+  for(int i=1;i<=1000;i++){
+    fprintf(fp3,"%d\n", digits[i]);
   }
 }
