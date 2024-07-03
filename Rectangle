@@ -10,18 +10,30 @@ int * gen(){
   gettimeofday(&tv, NULL);
   static int digits[1000];
   int value = tv.tv_usec;
-  int old = value;
+  int old = value%10000;
   for (int i=1; i<=1000; i++)
   {
     digits[i] = value;
-    printf("%d", value%10);
-    if (value>=10)
+    printf("%d\t", value%100);
+    if (value>=100)
     {
-      value = value/10;
+      value = value/100;
     }
     else
     {
-      value = old+tv.tv_usec;
+      value = old*old/100;
+      if (value%100==0){
+        value=value/100;
+      }
+      else if(value%10000<100){
+        value=value%10000+value/100;
+      }
+      else{
+        value=value%10000;
+      }
+      if (value<100){
+        value=value*value;
+      }
       old = value;
     }
   }
@@ -33,10 +45,10 @@ int main(){
   fp1=fopen("orb1.txt","w");
   for(int i=1;i<=1000;i+=2){
     if (digits[i]>=10){
-      digits[i]=digits[i]%10;
+      digits[i]=digits[i]%100;
     }
     if (digits[i+1]>=10){
-      digits[i+1]=digits[i+1]%10;
+      digits[i+1]=digits[i+1]%100;
     }
     fprintf(fp1,"%d\t%d\n", digits[i],digits[i+1]);
   }
