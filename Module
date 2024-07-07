@@ -1,25 +1,24 @@
-#include <stdio.h>
-#include <time.h>
-#include <sys/time.h>
-#include <math.h>
+#include "./Generate_Module.h"
 int q = 16807;
 int m = 0x7fffffff;
 long int seed;
-double gen(int a, int b){
-    a *= 10;
-    b *= 10;
-    double v;
+double section_uniform(int a, int b, int sign){
+    sign = pow(10, sign);
+    a *= sign;
+    b *= sign;
+    double z0;
     if (seed==0){
       seed = time(0);
     }
     do{
       seed = seed * q % m;
-      v = (seed%(b+1-a)+a);
+      z0 = (seed%(b+sign-a)+a);
     }
-    while(v<a||v>b);
-    return v/10.0;
+    while(z0<a||z0>b);
+    return z0/sign;
 }
-double gen2(double a, double b){
+double section_normal(double a, double b, int sign){
+    sign = pow(10, sign);
     double x;
     double y;
     double s;
@@ -43,29 +42,31 @@ double gen2(double a, double b){
       }
     }
     while(z0>b||z0<a);
-    return z0;
+    return round(z0*sign)/sign;
 }
 
-void rectangle(int a, int b, int c, int d, double* x, double* y){
-  a *= 10;
-  b *= 10;
-  c *= 10;
-  d *= 10;
+void rectangle_uniform(int a, int b, int c, int d, int sign, double* x, double* y){
+  sign = pow(10, sign);
+  a *= sign;
+  b *= sign;
+  c *= sign;
+  d *= sign;
   if (seed==0){
     seed = time(0);
   }
   do{
     seed = seed * q % m;
-    *x = (seed%(b+1-a)+a);
+    *x = (seed%(b+sign-a)+a);
     seed = seed * q % m;
-    *y = (seed%(d+1-c)+c);
+    *y = (seed%(d+sign-c)+c);
   }
   while(*x<a||*x>b||*y<c||*y>d);
-  *x /= 10;
-  *y /= 10;
+  *x /= sign;
+  *y /= sign;
 }
 
-void rectangle2(int a, int b, int c, int d, double* x, double* y){
+void rectangle_normal(int a, int b, int c, int d, int sign, double* x, double* y){
+  sign = pow(10, sign);
   double X;
   double Y;
   double s;
@@ -89,12 +90,13 @@ void rectangle2(int a, int b, int c, int d, double* x, double* y){
     z1 = z1*((d-c)/7.5) + c+(d-c)/2;
   }
   while(z0>b||z0<a||z1>d||z1<c);
-  *x = z0;
-  *y = z1;
+  *x = round(z0*sign)/sign;
+  *y = round(z1*sign)/sign;
 }
 
-void circle(int a, double* x, double* y){
-  a *= 10;
+void circle_uniform(int a, int sign, double* x, double* y){
+  sign = pow(10, sign);
+  a *= sign;
   int b = a - a*2;
   double v;
   double w;
@@ -103,21 +105,22 @@ void circle(int a, double* x, double* y){
   }
   do{
     seed = seed * q % m;
-    v = seed%((a+10-b))+b;
+    v = seed%((a+sign-b))+b;
     seed = seed * q % m;
-    w = seed%(a+10-b);
+    w = seed%(a+sign-b);
   }
   while(sqrt(v*v+w*w)>a);
-  *x = v / 10.0;
-  *y = w / 10.0;
+  *x = v / sign;
+  *y = w / sign;
 
 }
 
-void circle2(int a, double* x, double* y){
+void circle_normal(int a, int sign, double* x, double* y){
+  sign = pow(10, sign);
   a *= 10;
   int b = a - a*2;
-  double v;
-  double w;
+  double z0;
+  double z1;
   double X;
   double Y;
   if (seed==0){
@@ -131,41 +134,43 @@ void circle2(int a, double* x, double* y){
       Y = seed%1000000/1000000.0;
     }
     while(X<0||Y<0);
-    v = cos(2.0*M_PI*Y)*sqrt(-2.0*log(X));
-    w = sin(2.0*M_PI*Y)*sqrt(-2.0*log(X));
-    v = v*((a-b)/7.5);
-    w = w*((a-b)/7.5);
+    z0 = cos(2.0*M_PI*Y)*sqrt(-2.0*log(X));
+    z1 = sin(2.0*M_PI*Y)*sqrt(-2.0*log(X));
+    z0 = z0*((a-b)/7.5);
+    z1 = z1*((a-b)/7.5);
   }
-  while(v>a||v<b||w>a||w<b||sqrt(v*v+w*w)>a);
-  *x = v / 10.0;
-  *y = w / 10.0;
+  while(z0>a||z0<b||z1>a||z1<b||sqrt(z0*z0+z1*z1)>a);
+  *x = round(z0*sign)/sign;
+  *y = round(z1*sign)/sign;
 }
 
-void paraped(int a, int b, int c, int d, int e, int f, double* x, double* y, double* z){
-  a *= 10;
-  b *= 10;
-  c *= 10;
-  d *= 10;
-  e *= 10;
-  f *= 10;
+void paraped_uniform(int a, int b, int c, int d, int e, int f, int sign, double* x, double* y, double* z){
+  sign = pow(10, sign);
+  a *= sign;
+  b *= sign;
+  c *= sign;
+  d *= sign;
+  e *= sign;
+  f *= sign;
   if (seed==0){
     seed = time(0);
   }
   do{
     seed = seed * q % m;
-    *x = (seed%(b+1-a)+a);
+    *x = (seed%(b+sign-a)+a);
     seed = seed * q % m;
-    *y = (seed%(d+1-c)+c);
+    *y = (seed%(d+sign-c)+c);
     seed = seed * q % m;
-    *z = (seed%(f+1-e)+e);
+    *z = (seed%(f+sign-e)+e);
   }
   while(*x<a||*x>b||*y<c||*y>d||*z<e||*z>f);
-  *x /= 10;
-  *y /= 10;
-  *z /= 10;
+  *x /= sign;
+  *y /= sign;
+  *z /= sign;
 }
 
-void paraped2(int a, int b, int c, int d, int e, int f, double* x, double* y, double* z){
+void paraped_normal(int a, int b, int c, int d, int e, int f, int sign, double* x, double* y, double* z){
+  sign = pow(10, sign);
   double X;
   double Y;
   double Z;
@@ -195,42 +200,42 @@ void paraped2(int a, int b, int c, int d, int e, int f, double* x, double* y, do
     z2 = z2*((f-e)/7.5) + e+(f-e)/2;
   }
   while(z0>b||z0<a||z1>d||z1<c||z2>f||z2<e);
-  *x = z0;
-  *y = z1;
-  *z = z2;
+  *x = round(z0*sign)/sign;
+  *y = round(z1*sign)/sign;
+  *z = round(z2*sign)/sign;
 }
 
-void ball(int a, int sign, double* x, double* y, double* z){
+void ball_uniform(int a, int sign, double* x, double* y, double* z){
   sign = pow(10, sign);
   a *= sign;
   int b = a - a*2;
-  double v;
-  double w;
-  double k;
+  double z0;
+  double z1;
+  double z2;
   if (seed==0){
     seed = time(0);
   }
   do{
     seed = seed * q % m;
-    v = seed%((a+sign-b))+b;
+    z0 = seed%((a+sign-b))+b;
     seed = seed * q % m;
-    w = seed%(a+sign-b);
+    z1 = seed%(a+sign-b);
     seed = seed * q % m;
-    k = seed%(a+sign-b);
+    z2 = seed%(a+sign-b);
   }
-  while(sqrt(v*v+w*w)>a||sqrt(v*v+k*k)>a||sqrt(k*k+w*w)>a);
-  *x = v / sign;
-  *y = w / sign;
-  *z = k / sign;
+  while(sqrt(z0*z0+z1*z1)>a||sqrt(z0*z0+z2*z2)>a||sqrt(z2*z2+z1*z1)>a);
+  *x = z0 / sign;
+  *y = z1 / sign;
+  *z = z2 / sign;
 }
 
-void ball2(int a, int sign, double* x, double* y, double* z){
+void ball_normal(int a, int sign, double* x, double* y, double* z){
   sign = pow(10, sign);
   a *= sign;
   int b = a - a*2;
-  double v;
-  double w;
-  double k;
+  double z0;
+  double z1;
+  double z2;
   double X;
   double Y;
   double Z;
@@ -247,32 +252,15 @@ void ball2(int a, int sign, double* x, double* y, double* z){
       Z = seed%1000000/1000000.0;
     }
     while(X<0||Y<0||Z<0);
-    v = cos(2.0*M_PI*Y)*sqrt(-2.0*log(X));
-    w = sin(2.0*M_PI*Y)*sqrt(-2.0*log(X));
-    k = cos(2.0*M_PI*Z)*sqrt(-2.0*log(X));
-    v = v*((a-b)/7.5);
-    w = w*((a-b)/7.5);
-    k = k*((a-b)/7.5);
+    z0 = cos(2.0*M_PI*Y)*sqrt(-2.0*log(X));
+    z1 = sin(2.0*M_PI*Y)*sqrt(-2.0*log(X));
+    z2 = cos(2.0*M_PI*Z)*sqrt(-2.0*log(X));
+    z0 = z0*((a-b)/7.5);
+    z1 = z1*((a-b)/7.5);
+    z2 = z2*((a-b)/7.5);
   }
-  while(v>a||v<b||w>a||w<b||sqrt(v*v+w*w)>a||sqrt(v*v+k*k)>a||sqrt(k*k+w*w)>a);
-  *x = v / sign;
-  *y = w / sign;
-  *z = k / sign;
-}
-int main(void){
-  printf("%f\n", gen(-6,234));
-  double x;
-  double y;
-  double z;
-  ball2(56, 2, &x, &y, &z);
-  printf("%f\t%f\t%f\n", x, y, z);
-  FILE *fp3=NULL;
-  fp3=fopen("gen1.txt","w");
-  for(int i=1;i<=10000;i++){
-    ball2(56, 2, &x, &y, &z);
-    fprintf(fp3,"%f\t%f\t%f\n", x, y, z);
-  }
-  return 0;
-
-
+  while(z0>a||z0<b||z1>a||z1<b||z2>a||z2<b||sqrt(z0*z0+z1*z1)>a||sqrt(z0*z0+z2*z2)>a||sqrt(z2*z2+z1*z1)>a);
+  *x = round(z0*sign)/sign;
+  *y = round(z1*sign)/sign;
+  *z = round(z2*sign)/sign;
 }
