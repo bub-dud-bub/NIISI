@@ -13,7 +13,7 @@ void graph1(){
 	  exit(EXIT_FAILURE);
 	}
 	fprintf(gnuplot, "load 'plot1.gnu'\n");
-	fprintf(stdout, "Нажмите Enter чтобы продолжить\n");
+	fprintf(stdout, "Нажмите Enter чтобы продолжить\n\n");
 	fflush(gnuplot);
 	getchar();
 	pclose(gnuplot);	
@@ -25,7 +25,7 @@ void graph2(){
 	  exit(EXIT_FAILURE);
 	}
 	fprintf(gnuplot, "load 'plot2.gnu'\n");
-	fprintf(stdout, "Нажмите Enter чтобы продолжить\n");
+	fprintf(stdout, "Нажмите Enter чтобы продолжить\n\n");
 	fflush(gnuplot);
 	getchar();
 	pclose(gnuplot);	
@@ -37,19 +37,7 @@ void graph3(){
 	  exit(EXIT_FAILURE);
 	}
 	fprintf(gnuplot, "load 'plot3.gnu'\n");
-	fprintf(stdout, "Нажмите Enter чтобы продолжить\n");
-	fflush(gnuplot);
-	getchar();
-	pclose(gnuplot);	
-}
-void graph4(){
-	FILE *gnuplot = popen("gnuplot", "w");
-	if (!gnuplot) {
-	  perror("popen");
-	  exit(EXIT_FAILURE);
-	}
-	fprintf(gnuplot, "load 'plot4.gnu'\n");
-	fprintf(stdout, "Нажмите Enter чтобы продолжить\n");
+	fprintf(stdout, "Нажмите Enter чтобы продолжить\n\n");
 	fflush(gnuplot);
 	getchar();
 	pclose(gnuplot);	
@@ -80,9 +68,9 @@ void test1(double a, double b, int sign, int size){
    	Xi += pow(stat[i] - count, 2)/count;
    }
    n1 /= size;
-   printf("1)Равномерное на отрезке [%f,%f]:\n", a, b);
-   printf("Значение Хи-квадрат:%f\n", Xi);
-   printf("Среднее значение:%f\n", n1);
+   printf("1)Равномерное на отрезке [%f,%f] с выборкой %d значений:\n", a, b, size);
+   printf("\tЗначение Хи-квадрат:%f\n", Xi);
+   printf("\tСреднее значение:%f\n\n", n1);
    fclose(fp3);
    graph1();
 }
@@ -118,10 +106,10 @@ void test2(double a, double b, int sign, int size){
    	n4+=pow(i+a-n1,4)*stat[i];
    }
    Q = sqrt(n2/size);
-   printf("2)Нормальное на отрезке [%f,%f]:\n", a, b);
-   printf("Ассиметрия:%f\n", (n3/size)/pow(Q,3));
-   printf("Эксцесс:%f\n", (n4/size)/pow(Q,4)-3);
-   printf("Среднее значение:%f\n", n1);
+   printf("2)Нормальное на отрезке [%f,%f] с выборкой %d значений:\n", a, b, size);
+   printf("\tАссиметрия:%f\n", (n3/size)/pow(Q,3));
+   printf("\tЭксцесс:%f\n", (n4/size)/pow(Q,4)-3);
+   printf("\tСреднее значение:%f\n\n", n1);
    fclose(fp3);
    graph1();
 }
@@ -163,10 +151,10 @@ void test3(double a, double b, double c, double d, int sign, int size){
    	Xi += pow(stat[i] - count, 2)/count;
    }
    n1 /= size;
-   printf("3)Равномерное на прямоугольнике:\n");
+   printf("3)Равномерное на прямоугольнике с выборкой %d значений:\n", size);
    printf("Интервал [%f,%f]:\n", a, b);
-   printf("3начение Хи-квадрат:%f\n", Xi);
-   printf("Среднее значение:%f\n", n1);
+   printf("\t3начение Хи-квадрат:%f\n", Xi);
+   printf("\tСреднее значение:%f\n\n", n1);
    count = size/(d-c+1);
    Xi=0;
    for (int i=0;i<=abs(d-c);i++){
@@ -174,8 +162,8 @@ void test3(double a, double b, double c, double d, int sign, int size){
    }
    v1 /= size;
    printf("Интервал [%f,%f]:\n", c, d);
-   printf("Значение Хи-квадрат:%f\n", Xi);
-   printf("Среднее значение:%f\n", v1);
+   printf("\tЗначение Хи-квадрат:%f\n", Xi);
+   printf("\tСреднее значение:%f\n\n", v1);
    fclose(fp3);
    graph2();
 }
@@ -224,11 +212,11 @@ void test4(double a, double b, double c, double d, int sign, int size){
    	n4+=pow(i+a-n1,4)*stat[i];
    }
    Q = sqrt(n2/size);
-   printf("4)Нормальное на прямоугольнике:\n");
+   printf("4)Нормальное на прямоугольнике с выборкой %d значений:\n", size);
    printf("Интервал  [%f,%f]:\n", a, b);
-   printf("Ассиметрия:%f\n", (n3/size)/pow(Q,3));
-   printf("Экцесс:%f\n", (n4/size)/pow(Q,4)-3);
-   printf("Среднее значение:%f\n", n1);
+   printf("\tАссиметрия:%f\n", (n3/size)/pow(Q,3));
+   printf("\tЭкцесс:%f\n", (n4/size)/pow(Q,4)-3);
+   printf("\tСреднее значение:%f\n\n", n1);
    count = size/(abs(d-c+1));
    v1/=size;
    n2 = 0;
@@ -241,9 +229,9 @@ void test4(double a, double b, double c, double d, int sign, int size){
    }
    Q = sqrt(n2/size);
    printf("Интервал  [%f,%f]:\n", c, d);
-   printf("Ассиметрия:%f\n", (n3/size)/pow(Q,3));
-   printf("Экцесс:%f\n", (n4/size)/pow(Q,4)-3);
-   printf("Среднее значение:%f\n", v1);
+   printf("\tАссиметрия:%f\n", (n3/size)/pow(Q,3));
+   printf("\tЭкцесс:%f\n", (n4/size)/pow(Q,4)-3);
+   printf("\tСреднее значение:%f\n\n", v1);
    fclose(fp3);
    graph2();
 }
@@ -283,20 +271,20 @@ void test5(double r, int sign, int size){
    	Xi += pow(stat[i] - count, 2)/count;
    }
    n1 /= size;
-   printf("5)Равномерное на круге с радиусом %f:\n", r);
+   printf("5)Равномерное на круге с радиусом %f с выборкой %d значений:\n", r, size);
    printf("Точки по оси Х:\n");
-   printf("Значение Хи-квадрат:%f\n", Xi);
-   printf("Среднее значение:%f\n", n1);
+   printf("\tЗначение Хи-квадрат:%f\n", Xi);
+   printf("\tСреднее значение:%f\n\n", n1);
    Xi=0;
    for (int i=0;i<=r*2;i++){
    	Xi += pow(stat2[i] - count, 2)/count;
    }
    v1 /= size;
    printf("Точки по оси У:\n");
-   printf("Значение Хи-квадрат:%f\n", Xi);
-   printf("Среднее значение:%f\n", v1);
+   printf("\tЗначение Хи-квадрат:%f\n", Xi);
+   printf("\tСреднее значение:%f\n\n", v1);
    fclose(fp3);
-   graph3();
+   graph2();
 }
 
 void test6(double r, double sign, int size){
@@ -341,11 +329,11 @@ void test6(double r, double sign, int size){
    	n4+=pow(i+l-n1,4)*stat[i];
    }
    Q = sqrt(n2/size);
-   printf("6)Нормальное на круге с радиусом %f:\n", r);
+   printf("6)Нормальное на круге с радиусом %f с выборкой %d значений:\n", r, size);
    printf("Точки по оси Х:\n");
-   printf("Ассиметрия:%f\n", (n3/size)/pow(Q,3));
-   printf("Экцесс:%f\n", (n4/size)/pow(Q,4)-3);
-   printf("Среднее значение:%f\n", n1);
+   printf("\tАссиметрия:%f\n", (n3/size)/pow(Q,3));
+   printf("\tЭкцесс:%f\n", (n4/size)/pow(Q,4)-3);
+   printf("\tСреднее значение:%f\n\n", n1);
    v1/=size;
    n2 = 0;
    n3 = 0;
@@ -357,11 +345,11 @@ void test6(double r, double sign, int size){
    }
    Q = sqrt(n2/size);
    printf("Точки по оси У:\n");
-   printf("Ассиметрия:%f\n", (n3/size)/pow(Q,3));
-   printf("Экцесс:%f\n", (n4/size)/pow(Q,4)-3);
-   printf("Среднее значение:%f\n", v1);
+   printf("\tАссиметрия:%f\n", (n3/size)/pow(Q,3));
+   printf("\tЭкцесс:%f\n", (n4/size)/pow(Q,4)-3);
+   printf("\tСреднее значение:%f\n\n", v1);
    fclose(fp3);
-   graph3();
+   graph2();
 }
 
 void test7(double a, double b, double c, double d, double e, double f, int sign, int size){
@@ -414,10 +402,10 @@ void test7(double a, double b, double c, double d, double e, double f, int sign,
    	Xi += pow(stat[i] - count, 2)/count;
    }
    n1 /= size;
-   printf("7)Равномерное на параллелепипиде:\n");
+   printf("7)Равномерное на параллелепипиде с выборкой %d значений:\n", size);
    printf("Интервал [%f,%f]:\n", a, b);
-   printf("Значение Хи-квадрат:%f\n", Xi);
-   printf("Среднее значение:%f\n", n1);
+   printf("\tЗначение Хи-квадрат:%f\n", Xi);
+   printf("\tСреднее значение:%f\n\n", n1);
    count = size/(abs(d-c+1));
    Xi=0;
    for (int i=0;i<=abs(d-c);i++){
@@ -425,8 +413,8 @@ void test7(double a, double b, double c, double d, double e, double f, int sign,
    }
    v1 /= size;
    printf("Интервал [%f,%f]:\n", c, d);
-   printf("Значение Хи-квадрат:%f\n", Xi);
-   printf("Среднее значение:%f\n", v1);
+   printf("\tЗначение Хи-квадрат:%f\n", Xi);
+   printf("\tСреднее значение:%f\n\n", v1);
    count = size/(abs(f-e+1));
    Xi=0;
    for (int i=0;i<=abs(f-e);i++){
@@ -434,10 +422,10 @@ void test7(double a, double b, double c, double d, double e, double f, int sign,
    }
    k1 /= size;
    printf("Интервал [%f,%f]:\n", e, f);
-   printf("Значение Хи-квадрат:%f\n", Xi);
-   printf("Среднее значение:%f\n", k1);
+   printf("\tЗначение Хи-квадрат:%f\n", Xi);
+   printf("\tСреднее значение:%f\n\n", k1);
    fclose(fp3);
-   graph4();
+   graph3();
 }
 
 void test8(double a, double b, double c, double d, double e, double f, int sign, int size){
@@ -496,11 +484,11 @@ void test8(double a, double b, double c, double d, double e, double f, int sign,
    	n4+=pow(i+a-n1,4)*stat[i];
    }
    Q = sqrt(n2/size);
-   printf("8)Нормальное на параллелепипиде:\n");
+   printf("8)Нормальное на параллелепипиде с выборкой %d значений:\n", size);
    printf("Интервал  [%f,%f]:\n", a, b);
-   printf("Ассиметрия:%f\n", (n3/size)/pow(Q,3));
-   printf("Экцесс:%f\n", (n4/size)/pow(Q,4)-3);
-   printf("Среднее значение:%f\n", n1);
+   printf("\tАссиметрия:%f\n", (n3/size)/pow(Q,3));
+   printf("\tЭкцесс:%f\n", (n4/size)/pow(Q,4)-3);
+   printf("\tСреднее значение:%f\n\n", n1);
    count = size/(abs(d-c+1));
    v1/=size;
    n2 = 0;
@@ -513,9 +501,9 @@ void test8(double a, double b, double c, double d, double e, double f, int sign,
    }
    Q = sqrt(n2/size);
    printf("Интервал  [%f,%f]:\n", c, d);
-   printf("Ассиметрия:%f\n", (n3/size)/pow(Q,3));
-   printf("Экцесс:%f\n", (n4/size)/pow(Q,4)-3);
-   printf("Среднее значение:%f\n", v1);
+   printf("\tАссиметрия:%f\n", (n3/size)/pow(Q,3));
+   printf("\tЭкцесс:%f\n", (n4/size)/pow(Q,4)-3);
+   printf("\tСреднее значение:%f\n\n", v1);
    count = size/(abs(F-E+1));
    k1/=size;
    n2 = 0;
@@ -528,11 +516,11 @@ void test8(double a, double b, double c, double d, double e, double f, int sign,
    }
    Q = sqrt(n2/size);
    printf("Интервал  [%f,%f]:\n", e, f);
-   printf("Ассиметрия:%f\n", (n3/size)/pow(Q,3));
-   printf("Экцесс:%f\n", (n4/size)/pow(Q,4)-3);
-   printf("Среднее значение:%f\n", k1);
+   printf("\tАссиметрия:%f\n", (n3/size)/pow(Q,3));
+   printf("\tЭкцесс:%f\n", (n4/size)/pow(Q,4)-3);
+   printf("\tСреднее значение:%f\n\n", k1);
    fclose(fp3);
-   graph4();
+   graph3();
 }   
 
 void test9(double r, int sign, int size){
@@ -579,28 +567,28 @@ void test9(double r, int sign, int size){
    	Xi += pow(stat[i] - count, 2)/count;
    }
    n1 /= size;
-   printf("9)Равномерное на шаре с радиусом %f:\n", r);
+   printf("9)Равномерное на шаре с радиусом %f с выборкой %d значений:\n", r, size);
    printf("Точки по оси Х:\n");
-   printf("Значение Хи-квадрат:%f\n", Xi);
-   printf("Среднее значение:%f\n", n1);
+   printf("\tЗначение Хи-квадрат:%f\n", Xi);
+   printf("\tСреднее значение:%f\n\n", n1);
    Xi=0;
    for (int i=0;i<=r*2;i++){
    	Xi += pow(stat2[i] - count, 2)/count;
    }
    v1 /= size;
    printf("Точки по оси У:\n");
-   printf("Значение Хи-квадрат:%f\n", Xi);
-   printf("Среднее значение:%f\n", v1);
+   printf("\tЗначение Хи-квадрат:%f\n", Xi);
+   printf("\tСреднее значение:%f\n\n", v1);
    Xi=0;
    for (int i=0;i<=r*2;i++){
    	Xi += pow(stat3[i] - count, 2)/count;
    }
    k1 /= size;
    printf("Точки по оси Z:\n");
-   printf("Значение Хи-квадрат:%f\n", Xi);
-   printf("Среднее значение:%f\n", k1);
+   printf("\tЗначение Хи-квадрат:%f\n", Xi);
+   printf("\tСреднее значение:%f\n\n", k1);
    fclose(fp3);
-   graph4();
+   graph3();
 }
 
 void test10(double r, double sign, int size){
@@ -654,11 +642,11 @@ void test10(double r, double sign, int size){
    	n4+=pow(i+l-n1,4)*stat[i];
    }
    Q = sqrt(n2/size);
-   printf("10)Нормальное на шаре с радиусом %f:\n", r);
+   printf("10)Нормальное на шаре с радиусом %f с выборкой %d значений:\n", r, size);
    printf("Точки по оси Х:\n");
-   printf("Ассиметрия:%f\n", (n3/size)/pow(Q,3));
-   printf("Экцесс:%f\n", (n4/size)/pow(Q,4)-3);
-   printf("Среднее значение:%f\n", n1);
+   printf("\tАссиметрия:%f\n", (n3/size)/pow(Q,3));
+   printf("\tЭкцесс:%f\n", (n4/size)/pow(Q,4)-3);
+   printf("\tСреднее значение:%f\n\n", n1);
    v1/=size;
    n2 = 0;
    n3 = 0;
@@ -670,9 +658,9 @@ void test10(double r, double sign, int size){
    }
    Q = sqrt(n2/size);
    printf("Точки по оси У:\n");
-   printf("Ассиметрия:%f\n", (n3/size)/pow(Q,3));
-   printf("Экцесс:%f\n", (n4/size)/pow(Q,4)-3);
-   printf("Среднее значение:%f\n", v1);
+   printf("\tАссиметрия:%f\n", (n3/size)/pow(Q,3));
+   printf("\tЭкцесс:%f\n", (n4/size)/pow(Q,4)-3);
+   printf("\tСреднее значение:%f\n\n", v1);
    k1/=size;
    n2 = 0;
    n3 = 0;
@@ -684,11 +672,11 @@ void test10(double r, double sign, int size){
    }
    Q = sqrt(n2/size);
    printf("Точки по оси У:\n");
-   printf("Ассиметрия:%f\n", (n3/size)/pow(Q,3));
-   printf("Экцесс:%f\n", (n4/size)/pow(Q,4)-3);
-   printf("Среднее значение:%f\n", k1);
+   printf("\tАссиметрия:%f\n", (n3/size)/pow(Q,3));
+   printf("\tЭкцесс:%f\n", (n4/size)/pow(Q,4)-3);
+   printf("\tСреднее значение:%f\n\n", k1);
    fclose(fp3);
-   graph4();
+   graph3();
 }
 
 int main(void){
@@ -696,7 +684,7 @@ int main(void){
   double y;
   double z;
   setlocale(LC_ALL, "Rus");
-  printf("Добро пожаловать в программу тестирования!\n");
+  printf("Добро пожаловать в программу тестирования!\n\n");
   printf("Розыгрыш одной величины:\n");
   printf("Равномерное на отрезке [%d,%d]: %.2f\n", -10, 10, section_uniform(-10, 10, 2));
   printf("Нормальное на отрезке [%d,%d]: %.2f\n", -10, 10, section_normal(-10, 10, 2));
@@ -716,19 +704,19 @@ int main(void){
   printf("Равномерное на шаре [%d]: %.2f, %.2f, %.2f\n", 10, x, y, z);
   ball_normal(10, 2, &x, &y, &z);
   printf("Нормальное на шаре [%d]: %.2f, %.2f, %.2f\n", 10, x, y, z);
-  printf("Нажмите Enter чтобы продолжить\n");
+  printf("Нажмите Enter чтобы продолжить\n\n");
   getchar();   
    
-   
-   //test1(0, 9, 0, 10000);
-   //test2(0, 9, 0, 10000);
-   //test3(0, 25, -25, 0, 0, 10000);
-   //test4(0, 25, -25, 0, 0, 10000);
-   //test5(25, 0, 10000);
-   //test6(25, 0, 10000);
-   //test7(0, 25, -25, 0, 0, 25, 0, 10000);
-   //test8(0, 25, -25, 0, 0, 25, 0, 10000);
-   test9(25, 0, 10000);
-   test10(25, 0, 10000);
+  int size = 10000;
+   test1(0, 9, 0, size);
+   test2(0, 9, 0, size);
+   test3(0, 25, -25, 0, 0, size);
+   test4(0, 25, -25, 0, 0, size);
+   test5(25, 0, size);
+   test6(25, 0, size);
+   test7(0, 25, -25, 0, 0, 25, 0, size);
+   test8(0, 25, -25, 0, 0, 25, 0, size);
+   test9(25, 0, size);
+   test10(25, 0, size);
    return 0;
 }
