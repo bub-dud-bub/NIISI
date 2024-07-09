@@ -13,7 +13,7 @@ void graph1(){
 	  exit(EXIT_FAILURE);
 	}
 	fprintf(gnuplot, "load 'plot1.gnu'\n");
-	fprintf(stdout, "Click Ctrl+d to quit...\n");
+	fprintf(stdout, "Нажмите Enter чтобы продолжить\n");
 	fflush(gnuplot);
 	getchar();
 	pclose(gnuplot);	
@@ -25,7 +25,7 @@ void graph2(){
 	  exit(EXIT_FAILURE);
 	}
 	fprintf(gnuplot, "load 'plot2.gnu'\n");
-	fprintf(stdout, "Click Ctrl+d to quit...\n");
+	fprintf(stdout, "Нажмите Enter чтобы продолжить\n");
 	fflush(gnuplot);
 	getchar();
 	pclose(gnuplot);	
@@ -37,7 +37,7 @@ void graph3(){
 	  exit(EXIT_FAILURE);
 	}
 	fprintf(gnuplot, "load 'plot3.gnu'\n");
-	fprintf(stdout, "Click Ctrl+d to quit...\n");
+	fprintf(stdout, "Нажмите Enter чтобы продолжить\n");
 	fflush(gnuplot);
 	getchar();
 	pclose(gnuplot);	
@@ -49,7 +49,7 @@ void graph4(){
 	  exit(EXIT_FAILURE);
 	}
 	fprintf(gnuplot, "load 'plot4.gnu'\n");
-	fprintf(stdout, "Click Ctrl+d to quit...\n");
+	fprintf(stdout, "Нажмите Enter чтобы продолжить\n");
 	fflush(gnuplot);
 	getchar();
 	pclose(gnuplot);	
@@ -165,8 +165,8 @@ void test3(double a, double b, double c, double d, int sign, int size){
    n1 /= size;
    printf("3)Равномерное на прямоугольнике:\n");
    printf("Интервал [%f,%f]:\n", a, b);
-   printf("Xi:%f\n", Xi);
-   printf("Average:%f\n", n1);
+   printf("3начение Хи-квадрат:%f\n", Xi);
+   printf("Среднее значение:%f\n", n1);
    count = size/(d-c+1);
    Xi=0;
    for (int i=0;i<=abs(d-c);i++){
@@ -414,7 +414,7 @@ void test7(double a, double b, double c, double d, double e, double f, int sign,
    	Xi += pow(stat[i] - count, 2)/count;
    }
    n1 /= size;
-   printf("3)Равномерное на параллелепипиде:\n");
+   printf("7)Равномерное на параллелепипиде:\n");
    printf("Интервал [%f,%f]:\n", a, b);
    printf("Значение Хи-квадрат:%f\n", Xi);
    printf("Среднее значение:%f\n", n1);
@@ -477,7 +477,7 @@ void test8(double a, double b, double c, double d, double e, double f, int sign,
    FILE *fp3=NULL;
    fp3=fopen("gen.txt","w");
    for(int i=1;i<=size;i++){
-     paraped_uniform(a, b, c, d, e, f, sign, &x, &y, &z);
+     paraped_normal(a, b, c, d, e, f, sign, &x, &y, &z);
      fprintf(fp3, "%f\t%f\t%f\n", x, y, z);
      X = x;
      Y = y;
@@ -635,7 +635,7 @@ void test10(double r, double sign, int size){
    FILE *fp3=NULL;
    fp3=fopen("gen.txt","w");
    for(int i=1;i<=size;i++){
-     ball_uniform(r, 0, &x, &y, &z);
+     ball_normal(r, 0, &x, &y, &z);
      fprintf(fp3, "%f\t%f\t%f\n", x, y, z);
      X = x+R;
      Y = y+R;
@@ -654,7 +654,7 @@ void test10(double r, double sign, int size){
    	n4+=pow(i+l-n1,4)*stat[i];
    }
    Q = sqrt(n2/size);
-   printf("6)Нормальное на круге с радиусом %f:\n", r);
+   printf("10)Нормальное на шаре с радиусом %f:\n", r);
    printf("Точки по оси Х:\n");
    printf("Ассиметрия:%f\n", (n3/size)/pow(Q,3));
    printf("Экцесс:%f\n", (n4/size)/pow(Q,4)-3);
@@ -692,19 +692,43 @@ void test10(double r, double sign, int size){
 }
 
 int main(void){
+  double x;
+  double y;
+  double z;
   setlocale(LC_ALL, "Rus");
-  printf("Добро пожаловать в программу тестирования!\nВыберите действие:\n");
+  printf("Добро пожаловать в программу тестирования!\n");
+  printf("Розыгрыш одной величины:\n");
+  printf("Равномерное на отрезке [%d,%d]: %.2f\n", -10, 10, section_uniform(-10, 10, 2));
+  printf("Нормальное на отрезке [%d,%d]: %.2f\n", -10, 10, section_normal(-10, 10, 2));
+  rectangle_uniform(-10, 10, -20, 20, 2, &x, &y);
+  printf("Равномерное на прямоугольнике [%d,%d]*[%d,%d]: %.2f, %.2f\n", -10, 10, -20, 20, x, y);
+  rectangle_normal(-10, 10, -20, 20, 2, &x, &y);
+  printf("Нормальное на прямоугольнике [%d,%d]*[%d,%d]: %.2f, %.2f\n", -10, 10, -20, 20, x, y);
+  circle_uniform(10, 2, &x, &y);
+  printf("Равномерное на круге [%d]: %.2f, %.2f\n", 10, x, y);
+  circle_normal(10, 2, &x, &y);
+  printf("Нормальное на круге [%d]: %.2f, %.2f\n", 10, x, y);
+  paraped_uniform(-10, 10, -20, 20, -30, 30, 2, &x, &y, &z);
+  printf("Равномерное на параллелепипеде [%d,%d]*[%d,%d]*[%d,%d]: %.2f, %.2f, %.2f\n", -10, 10, -20, 20, -30, 30, x, y, z);
+  paraped_normal(-10, 10, -20, 20, -30, 30, 2, &x, &y, &z);
+  printf("Нормальное на параллелепипеде [%d,%d]*[%d,%d]*[%d,%d]: %.2f, %.2f, %.2f\n", -10, 10, -20, 20, -30, 30, x, y, z);
+  ball_uniform(10, 2, &x, &y, &z);
+  printf("Равномерное на шаре [%d]: %.2f, %.2f, %.2f\n", 10, x, y, z);
+  ball_normal(10, 2, &x, &y, &z);
+  printf("Нормальное на шаре [%d]: %.2f, %.2f, %.2f\n", 10, x, y, z);
+  printf("Нажмите Enter чтобы продолжить\n");
+  getchar();   
    
    
    //test1(0, 9, 0, 10000);
    //test2(0, 9, 0, 10000);
-   //test3(0, 9, -9, 0, 0, 10000);
-   //test4(0, 9, -9, 0, 0, 10000);
-   //test5(10, 0, 10000);
-   //test6(10, 0, 10000);
-   //test7(0, 9, -9, 0, 0, 9, 0, 10000);
-   //test8(0, 9, -9, 0, 0, 9, 0, 10000);
-   //test9(10, 0, 10000);
-   test10(10, 0, 10000);
+   //test3(0, 25, -25, 0, 0, 10000);
+   //test4(0, 25, -25, 0, 0, 10000);
+   //test5(25, 0, 10000);
+   //test6(25, 0, 10000);
+   //test7(0, 25, -25, 0, 0, 25, 0, 10000);
+   //test8(0, 25, -25, 0, 0, 25, 0, 10000);
+   test9(25, 0, 10000);
+   test10(25, 0, 10000);
    return 0;
 }
